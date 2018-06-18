@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<!--
+Created using JS Bin
+http://jsbin.com
+
+Copyright (c) 2018 by anonymous (http://jsbin.com/badayokuli/4/edit)
+
+Released under the MIT license: http://jsbin.mit-license.org
+-->
+<meta name="robots" content="noindex">
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>JS Bin</title>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<style id="jsbin-css">
+.attestation-table-row {
+  border: 1px solid #eee;
+}
+
+.attestation-table.all .attestation-table-row:nth-child(even) {
+  background-color: #ffffff;
+  color: #404243;
+}
+
+.attestation-table.all .attestation-table-row:nth-child(odd) {
+  background-color: #dddddd;
+  color: #666666;
+}
+
+.attestation-table .applicable {
+  background-color: #ffffff;
+  color: #404243;
+}
+
+/*
+  Unfortunately, nth-of-type does not work for class selectors.
+  Have to do this nasty JS+CSS hack instead.
+*/
+.attestation-table .applicable.secondary-row {
+  background-color: #dddddd;
+  color: #666666;
+}
+
+.attestation-table-row span {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.attestation-table .attestation-table-row {
+  display: none;  
+}
+
+.attestation-table .attestation-table-row.applicable {
+  display: block;  
+}
+
+.attestation-table.all .attestation-table-row {
+   display: block;
+}
+</style>
+</head>
+<body>
+  <h1>Oh look! a dynamically generated table!</h1>
+  <div class="search-fields">
+      <input type="text" data-target="wallet-address" placeholder="search for wallet here"/>
+          <input type="text" data-target="kyc-status" placeholder="search for level here"/>
+  </div>
+  
+  <hr/>
+  
+<div class="container">
+  
+</div>
+  <hr/>
+<footer>
+  Khuu Enterprises 2018&reg;
+  </footer>
+<noscript x-shyft-template-name="attestation-table">
+  <div class="attestation-table all">
+  
+  </div>
+</noscript>
+
+<noscript x-shyft-template-name="attestation-table-row">
+  <div class="attestation-table-row">
+  </div>
+</noscript>
+
+<script id="jsbin-javascript">
+$(function() {
+
+	var attestations = [{
+  	'wallet-address' : '0xA35E36',
+    'kyc-status' : 'level 1'
+  },{
+  	'wallet-address' : '0xB35C36',
+    'kyc-status' : 'level 2'
+  },{
+  	'wallet-address' : '0xA37E38',
+    'kyc-status' : 'level 1'
+  },{
+  	'wallet-address' : '0xABBE36',
+    'kyc-status' : 'level 4'
+  },{
+  	'wallet-address' : '0xF35C36',
+    'kyc-status' : 'level 5'
+  },{
+  	'wallet-address' : '0xD37E38',
+    'kyc-status' : 'level 1'
+  }];
+
+  function renderTable(attestations) {
+  	var attestationTableMarkup = $('[x-shyft-template-name="attestation-table"]').html();
+    var attesatationTableRowMarkup = $('[x-shyft-template-name="attestation-table-row"]').html();
+
+    var $attestationTable = $(attestationTableMarkup);
+    
+  	[].forEach.call(attestations, function(attestation) {
+        var $attesationTableRow = $(attesatationTableRowMarkup);
+      
+        for (var key in attestation) {
+          if (attestation.hasOwnProperty(key)) {
+          	var $attestationAttribute = 
+                $('<span data-name="' + key + '" data-value="' + attestation[key].toLowerCase() + '">' + 
+                  attestation[key] + 
+                  '</span>');
+            $attesationTableRow.append($attestationAttribute);
+          }
+					
+        }
+      
+        $attestationTable.append($attesationTableRow);
+      
+        /*
+        $attesationTableRow.click((function(attestation){
+          return function(){
+             console.log(attestation);
+          }
+        })(attestation));
+       */
+      
+        //Alternatively
+        bindTableRowClick($attesationTableRow, attestation);
+    });
+    
+    $('.container').append($attestationTable);
+  }
+  
+  function bindTableRowClick($attesationTableRow, attestation) {
+    $attesationTableRow.click(function(e){
+      console.log(attestation);
+    });
+  }
+  
+  function bindSearch() {
+    $('.search-fields input').keyup(function(event) {
+      var $inputField = $(this);
+      var searchField = $inputField.attr('data-target');
+      var searchValue = $inputField.val();
+      
+      if (searchValue === "") {
+        $('.attestation-table').addClass('all');
+      } else {
+        $('.attestation-table').removeClass('all');
+        $('.attestation-table .attestation-table-row').removeClass('applicable');
+        $('.attestation-table .attestation-table-row').removeClass('secondary-row');
+        
+        showApplicableRows(searchField, searchValue.toLowerCase());
+      }
+    });
+    
+    
+  }
+  
+  function showApplicableRows(searchField, searchValue) {
+    var $applicableMatches = $('span[data-name="' + searchField + '"][data-value*="' + searchValue + '"]');
+    var $applicableRows = $applicableMatches.parent();
+    $applicableRows.addClass('applicable');
+    
+    /*
+      Unfortunately, nth-of-type does not work for class selectors.
+      Have to do this nasty JS+CSS hack instead.
+    */
+    $applicableRows.filter(function(index, element){
+      return index % 2 === 0;
+    }).addClass("secondary-row");
+  }
+  
+  renderTable(attestations);
+  bindSearch();
+});
+</script>
+</body>
+</html>

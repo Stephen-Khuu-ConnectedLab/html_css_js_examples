@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<!--
+Created using JS Bin
+http://jsbin.com
+
+Copyright (c) 2018 by anonymous (http://jsbin.com/ximahuyeli/2/edit)
+
+Released under the MIT license: http://jsbin.mit-license.org
+-->
+<meta name="robots" content="noindex">
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  
+  <title>JS Bin</title>
+<style id="jsbin-css">
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+li {
+  margin-left: -10px;
+}
+
+.nav, .page-carousel {
+  display: inline-block; 
+  height: 100%;
+  vertical-align: top;
+}
+
+.page-carousel, .page-carousel-scrollview, .page-carousel-container {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.nav {
+  width: 20%;
+}
+
+.page-carousel {
+  width: 78%;
+}
+
+.page-carousel-breadcrumbs, .page-carousel-controls {
+  position: absolute;
+  z-index: 2;
+}
+
+.page-carousel-container {
+  left: 0;
+  transition: left 0.3s ease-out;
+}
+
+.carousel-page {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+}
+
+.carousel-page p {
+ margin: 10%; 
+}
+
+#page-0 {
+  background-color: green;
+}
+
+#page-1 {
+  background-color: red;
+}
+
+#page-2 {
+  background-color: blue;
+}
+
+.page-carousel-controls {
+  bottom: 20px;
+  left: 50%;
+  margin-left: -25%;
+}
+
+.page-carousel-controls button {
+  cursor: pointer;
+}
+
+/* breadcrumbs */
+.page-carousel-breadcrumbs {
+  position: absolute;
+  z-index: 2;
+  top: 20px;
+  left: 20px;
+}
+
+.breadcrumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 1rem;
+  border: 3px solid black;
+  display: inline-block;
+  margin-right: 10px;
+  background-color: white;
+}
+
+.breadcrumb.selected {
+  background-color: black;
+}
+
+.page-carousel-scrollview {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+
+
+</style>
+</head>
+<body>
+  <div class="nav">
+    <ul>
+      <li>
+        This
+      </li>
+            <li>
+        is
+      </li>
+            <li>
+        a
+      </li>
+            <li>
+        nav
+      </li>
+    </ul>
+  </div>
+<div class="page-carousel">
+  <div class="page-carousel-breadcrumbs">
+    <div data-page-index="0" class="breadcrumb selected"></div>
+        <div data-page-index="1" class="breadcrumb"></div>
+        <div data-page-index="2" class="breadcrumb"></div>
+  </div> 
+  <div class="page-carousel-scrollview">
+      <div class="page-carousel-container">
+        <div id="page-0" class="carousel-page">
+          <p>I am the first page</p>
+        </div>
+        
+                <div id="page-1" class="carousel-page">
+          <p>I am the second page</p>
+        </div>
+        
+                <div id="page-2" class="carousel-page">
+          <p>I am the third page</p>
+        </div>
+    </div>
+  </div>
+
+  </div>
+  <div class="page-carousel-controls">
+    <button id="previous" disabled="disabled">Previous</button>
+        <button id="next">Next</button>
+  </div>
+  </div>
+<script id="jsbin-javascript">
+$(function() {
+  
+  var currentPage = 0;
+  var windowWidth;
+  var $pages =  $('.carousel-page');
+  var MAX_PAGES = $pages.length;
+  
+  function initializeCarousel() {
+    calculatePageSize();
+    bindControls();
+  }
+  
+  function calculatePageSize() {
+    var currentOffset = 0;
+    windowWidth = $('body').width();
+    
+    $('.carousel-page').each(function(index, el){
+      $(el).css('left', (currentOffset + 'px') );
+      currentOffset += windowWidth;
+    });
+    
+    $('.page-carousel-container').css('width', (currentOffset + 'px'));
+  }
+  
+  function bindControls() {
+    $('#previous').click(function() {
+      currentPage = currentPage - 1;
+      
+      if (currentPage === 0) {
+        $('#previous').attr('disabled', 'disabled');
+      }
+      
+      $('#next').removeAttr('disabled');
+      updateCarouselOffset();
+    });
+    
+    $('#next').click(function() {
+      currentPage = currentPage + 1;
+      
+      if (currentPage === (MAX_PAGES-1)) {
+        $('#next').attr('disabled', 'disabled');
+      }
+      
+      $('#previous').removeAttr('disabled');
+      updateCarouselOffset();
+    });
+    
+    $(window).resize(function() {
+      calculatePageSize();
+      updateCarouselOffset();
+    });
+  }
+  
+  function updateCarouselOffset() {
+    $('.page-carousel-container').css('left', ((-1) * currentPage * windowWidth)  + 'px');
+    
+    updateBreadCrumb();
+  }
+  
+  function updateBreadCrumb() {
+    $('.breadcrumb.selected').removeClass('selected');
+    
+    $('.breadcrumb[data-page-index="' + currentPage + '"]').addClass('selected');
+  }
+    
+  
+  
+  initializeCarousel();
+});
+</script>
+</body>
+</html>

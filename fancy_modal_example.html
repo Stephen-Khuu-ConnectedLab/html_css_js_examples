@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<!--
+Created using JS Bin
+http://jsbin.com
+
+Copyright (c) 2018 by anonymous (http://jsbin.com/pubiqadujo/1/edit)
+
+Released under the MIT license: http://jsbin.mit-license.org
+-->
+<meta name="robots" content="noindex">
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+
+    <title>JS Bin</title>
+<style id="jsbin-css">
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  -webkit-transform: translateZ(0);
+  height: 100%;
+}
+
+#page-wrap {
+  height: 400px;
+  text-align: center;
+}
+
+
+.dialogIsOpen #page-wrap {
+  -webkit-filter: blur(5px) grayscale(50%);
+
+  -webkit-transform: scale(0.9);
+}
+
+.modal {
+  background: white;
+
+  position: fixed;
+  width: 50%;
+  top: 50%;
+  left: 50%;
+  margin: -25% 0 0 -25%;
+
+  /* Embiggen */
+  transform: scale(1.5); /* prefix me */
+
+  /* Hidden */
+  opacity: 0;
+  pointer-events: none;
+  
+  padding: 20px;
+  
+  border: 2px solid #eee;
+  border-radius: 4px;
+}
+
+.modal-container {
+  position: relative;
+}
+
+.dialogIsOpen .modal {
+  
+  /* Regular size and visible */
+  transform: scale(1); /* prefix me */
+  opacity: 1;
+
+  /* Clickable */
+  pointer-events: auto;
+
+}
+
+#page-wrap, .modal {
+  
+  transition: all 0.4s ease; /* prefix me */
+
+}
+
+.close-button {
+  position: absolute;
+  text-align: right;
+  right: 5px;
+  top: 5px;
+  
+  cursor: pointer;
+}
+
+
+
+
+
+
+
+
+</style>
+</head>
+
+<body>
+
+    <div id="page-wrap">
+      <h1>Look at my button</h1>
+      <h2>My button is amazing</h2>
+        <button class='launch-attestation'>Click me!</button>
+    </div>
+    <div class='modal'>
+        <div class='modal-container'>
+            <div class='modal-title-bar'>
+                I am a title bar!
+              
+              <div class="close-button">X</div>
+            </div>
+            <div class='modal-content'>
+                I am modal content!
+            </div>
+            <div class='modal-footer'>
+                I am a footer
+                <div class="actions">
+                  <button>Button 1</button>
+                <button>Button 2</button>
+              </div>
+                
+            </div>
+
+        </div>
+    </div>
+<script id="jsbin-javascript">
+$(function() {
+  $('.launch-attestation').click(function(event){
+    event.preventDefault();
+    $("body").toggleClass("dialogIsOpen");
+  });
+  
+    $('.close-button').click(function(event){
+    event.preventDefault();
+    $("body").toggleClass("dialogIsOpen");
+  });
+});
+</script>
+</body>
+
+</html>
